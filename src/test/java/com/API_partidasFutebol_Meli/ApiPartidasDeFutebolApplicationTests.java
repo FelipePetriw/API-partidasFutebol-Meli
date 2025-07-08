@@ -1,4 +1,4 @@
-package com.API_partidasFutebol_Meli.API.Partidas.de.Futebol;
+package com.API_partidasFutebol_Meli;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.API_partidasFutebol_Meli.API.Partidas.de.Futebol;
+package com.API_partidasFutebol_Meli;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
