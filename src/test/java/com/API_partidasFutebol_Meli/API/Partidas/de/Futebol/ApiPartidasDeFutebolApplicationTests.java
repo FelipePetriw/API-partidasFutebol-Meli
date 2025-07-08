@@ -1,0 +1,13 @@
+package com.API_partidasFutebol_Meli.API.Partidas.de.Futebol;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ApiPartidasDeFutebolApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
