@@ -3,6 +3,7 @@ package com.API_partidasFutebol_Meli.service;
 import com.API_partidasFutebol_Meli.dto.ClubeRequestDTO;
 import com.API_partidasFutebol_Meli.dto.ClubeResponseDTO;
 import com.API_partidasFutebol_Meli.entity.Clube;
+import com.API_partidasFutebol_Meli.exception.RecursoDuplicadoException;
 import com.API_partidasFutebol_Meli.repository.ClubeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

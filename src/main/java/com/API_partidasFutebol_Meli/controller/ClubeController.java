@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/clubes")
 public class ClubeController {
 
-    private ClubeService clubeService;
+    private ClubeService service;
 
-    public ClubeController(ClubeService clubeService) {
-        this.clubeService = clubeService;
+    public ClubeController(ClubeService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<ClubeResponseDTO> criar(@Valid @RequestBody ClubeRequestDTO dto) {
+    public ResponseEntity<ClubeResponseDTO> criar(@RequestBody @Valid ClubeRequestDTO dto) {
         var response = service.criar(dto);
         return ResponseEntity.status(201).body(response);
     }
