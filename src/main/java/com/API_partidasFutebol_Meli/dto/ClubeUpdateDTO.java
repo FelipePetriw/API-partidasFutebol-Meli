@@ -1,17 +1,15 @@
 package com.API_partidasFutebol_Meli.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.antlr.v4.runtime.misc.NotNull;
 
-
 import java.time.LocalDate;
 
-public record ClubeRequestDTO(
+public record ClubeUpdateDTO(
         @NotBlank @Size(min = 2)
         String nome,
 
