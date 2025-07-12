@@ -5,6 +5,7 @@ import com.API_partidasFutebol_Meli.dto.ClubeResponseDTO;
 import com.API_partidasFutebol_Meli.dto.ClubeUpdateDTO;
 import com.API_partidasFutebol_Meli.entity.Clube;
 import com.API_partidasFutebol_Meli.exception.RecursoDuplicadoException;
+import com.API_partidasFutebol_Meli.exception.ResourceNotFoundException;
 import com.API_partidasFutebol_Meli.repository.ClubeRepository;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
@@ -55,5 +56,13 @@ public class ClubeService {
         clube.setDataCriacao(dto.dataCriacao());
 
         return new ClubeResponseDTO(clube.getId(), clube.getNome(), clube.getSiglaEstado(),  clube.getDataCriacao(), clube.getAtivo());
+    }
+
+    @Transactional
+    public void inativar(Long id) {
+        Clube clube = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Clube não encontrado."));
+
+        clube.setAtivo(false);
+        repository.save(clube);
     }
 }

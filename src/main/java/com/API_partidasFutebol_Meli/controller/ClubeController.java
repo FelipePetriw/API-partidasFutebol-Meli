@@ -5,6 +5,7 @@ import com.API_partidasFutebol_Meli.dto.ClubeResponseDTO;
 import com.API_partidasFutebol_Meli.dto.ClubeUpdateDTO;
 import com.API_partidasFutebol_Meli.service.ClubeService;
 import jakarta.validation.Valid;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,14 @@ public class ClubeController {
     }
 
     @PutMapping("/id")
-    public ResponseEntity<ClubeResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid ClubeUpdateDTO dto) {
+    public ResponseEntity<ClubeResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid ClubeUpdateDTO dto) throws BadRequestException {
         var response = service.atualizar(id, dto);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> inativar(@PathVariable Long id) {
+        service.inativar(id);
+        return ResponseEntity.noContent().build();
     }
 }
