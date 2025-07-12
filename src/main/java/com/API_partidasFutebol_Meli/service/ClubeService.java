@@ -65,4 +65,16 @@ public class ClubeService {
         clube.setAtivo(false);
         repository.save(clube);
     }
+
+    public ClubeResponseDTO buscarPorId(Long id) {
+        Clube clube = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Clube não encontrado."));
+
+        return new ClubeResponseDTO(
+                clube.getId(),
+                clube.getNome(),
+                clube.getSiglaEstado(),
+                clube.getDataCriacao(),
+                clube.getAtivo()
+        );
+    }
 }

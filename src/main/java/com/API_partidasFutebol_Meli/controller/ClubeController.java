@@ -37,4 +37,10 @@ public class ClubeController {
         service.inativar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClubeResponseDTO> buscarPorId(@PathVariable Long id) {
+        var response = service.buscarPorId(id);
+        return ResponseEntity.ok(response);
+    }
 }
