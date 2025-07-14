@@ -1,5 +1,6 @@
 package com.API_partidasFutebol_Meli.service;
 
+import com.API_partidasFutebol_Meli.dto.ClubeFiltroDTO;
 import com.API_partidasFutebol_Meli.dto.ClubeRequestDTO;
 import com.API_partidasFutebol_Meli.dto.ClubeResponseDTO;
 import com.API_partidasFutebol_Meli.dto.ClubeUpdateDTO;
@@ -8,6 +9,9 @@ import com.API_partidasFutebol_Meli.exception.RecursoDuplicadoException;
 import com.API_partidasFutebol_Meli.exception.ResourceNotFoundException;
 import com.API_partidasFutebol_Meli.repository.ClubeRepository;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,5 +80,33 @@ public class ClubeService {
                 clube.getDataCriacao(),
                 clube.getAtivo()
         );
+    }
+
+    public Page<ClubeResponseDTO> listar(ClubeFiltroDTO filtro, Pageable pageable) {
+        Specification<Clube> spec = Specification.where(null);
+
+        if(filtro.nome() != null && !filtro.nome().isBlank()) {
+            spec = spec.and((root, query, criteriaBuilder)
+                    -> criteriaBuilder.like(criteriaBuilder.lower(root.get("nome")), "%" + filtro.nome().toLowerCase() + "%"));
+        }
+
+        if(filtro.siglaEstado() != null && !filtro.siglaEstado().isBlank()) {
+            spec = spec.and((root, query, criteriaBuilder)
+                    -> criteriaBuilder.equal(root.get("siglaEstado"), filtro.siglaEstado()));
+        }
+
+        if (filtro.ativo() != null) {
+            spec = spec.and((root, query, criteriaBuilder)
+                    -> criteriaBuilder.equal(root.get("ativo"), filtro.ativo()));
+        }
+
+        return repository.findAll(spec, pageable).map(clube -> new ClubeResponseDTO(
+                clube.getId(),
+                clube.getNome(),
+                clube.getSiglaEstado(),
+                clube.getDataCriacao(),
+                clube.getAtivo()
+
+        ));
     }
 }
