@@ -70,6 +70,7 @@ public class ClubeService {
         repository.save(clube);
     }
 
+    @Transactional(readOnly = true)
     public ClubeResponseDTO buscarPorId(Long id) {
         Clube clube = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Clube não encontrado."));
 
@@ -82,6 +83,7 @@ public class ClubeService {
         );
     }
 
+    @Transactional
     public Page<ClubeResponseDTO> listar(ClubeFiltroDTO filtro, Pageable pageable) {
         Specification<Clube> spec = Specification.where(null);
 
