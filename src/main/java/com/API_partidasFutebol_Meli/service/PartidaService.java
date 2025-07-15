@@ -3,6 +3,7 @@ package com.API_partidasFutebol_Meli.service;
 import com.API_partidasFutebol_Meli.dto.PartidaRequestDTO;
 import com.API_partidasFutebol_Meli.dto.PartidaResponseDTO;
 import com.API_partidasFutebol_Meli.entity.Clube;
+import com.API_partidasFutebol_Meli.entity.Estadio;
 import com.API_partidasFutebol_Meli.entity.Partida;
 import com.API_partidasFutebol_Meli.exception.BadRequestException;
 import com.API_partidasFutebol_Meli.exception.ResourceNotFoundException;
