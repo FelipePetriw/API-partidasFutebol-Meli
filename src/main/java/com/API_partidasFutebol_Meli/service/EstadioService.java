@@ -47,4 +47,12 @@ public class EstadioService {
         Estadio atualizado = estadioRepository.save(estadio);
         return new EstadioResponseDTO(atualizado.getId(), atualizado.getNome());
     }
+
+    @Transactional
+    public EstadioResponseDTO buscarPorId(Long id) {
+        Estadio estadio = estadioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Estádio não encontrado."));
+
+        return new EstadioResponseDTO(estadio.getId(), estadio.getNome());
+    }
 }

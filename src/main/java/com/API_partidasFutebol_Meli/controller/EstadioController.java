@@ -29,4 +29,10 @@ public class EstadioController {
         var response = service.editar(id, dto);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EstadioResponseDTO> buscarPorId(@PathVariable Long id) {
+        var response = service.buscarPorId(id);
+        return ResponseEntity.ok(response);
+    }
 }
