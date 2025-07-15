@@ -5,20 +5,21 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record PartidaRequestDTO(
         @NotNull
-        Long clubeMandante,
+        Long clubeMandanteId,
 
         @NotNull
-        Long clubeVisitante,
+        Long clubeVisitanteId,
 
         @NotNull
         Long estadioId,
 
         @NotNull
         @PastOrPresent
-        LocalDate dataHora,
+        LocalDateTime dataHora,
 
         @NotNull
         @Min(0)

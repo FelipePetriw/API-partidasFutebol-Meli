@@ -29,7 +29,7 @@ public class PartidaService {
 
     @Transactional
     public PartidaResponseDTO cadastrar(PartidaRequestDTO dto) {
-        if (dto.clubeMandante().equals(dto.clubeVisitante())) {
+        if (dto.clubeMandanteId().equals(dto.clubeVisitanteId())) {
             throw new BadRequestException("Clube mandante e visitante não podem ser iguais.");
         }
 
@@ -57,7 +57,7 @@ public class PartidaService {
         }
 
         boolean estadioOcupado = partidaRepository.existsByEstadioAndDataHoraBetween(
-                estadio, dto.dataHora().toLocalDate().atStartOfDay(), dto.dataHora().atTime(23, 59));
+                estadio, dto.dataHora().toLocalDate().atStartOfDay(), dto.dataHora().toLocalDate().atTime(23, 59));
         if (estadioOcupado) {
             throw new ConflictException("Já existe partida nesse estádio no mesmo dia.");
         }
