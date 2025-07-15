@@ -3,7 +3,7 @@ package com.API_partidasFutebol_Meli.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "estadios", uniqueConstraints = @UniqueConstraint(ColumnNames = "nome"))
+@Table(name = "estadios") //uniqueConstraints = @UniqueConstraint(ColumnNames = "nome"))
 public class Estadio {
 
     @Id

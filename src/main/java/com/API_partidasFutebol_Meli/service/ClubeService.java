@@ -22,10 +22,9 @@ public class ClubeService {
     private final ClubeRepository repository;
     private final ClubeRepository clubeRepository;
 
-    public ClubeService(ClubeRepository repository, ClubeRepository clubeRepository, PartidaRepository partidaRepository) {
+    public ClubeService(ClubeRepository repository, ClubeRepository clubeRepository) {
         this.repository = repository;
         this.clubeRepository = clubeRepository;
-        this.partidaRepository = partidaRepository;
     }
 
     @Transactional

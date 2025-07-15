@@ -6,10 +6,7 @@ import com.API_partidasFutebol_Meli.service.EstadioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/estadios")
@@ -25,5 +22,11 @@ public class EstadioController {
     public ResponseEntity<EstadioResponseDTO> cadastrar(@RequestBody @Valid EstadioRequestDTO dto) {
         var response = service.cadastrar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EstadioResponseDTO> editar(@PathVariable Long id, @RequestBody @Valid EstadioRequestDTO dto) {
+        var response = service.editar(id, dto);
+        return ResponseEntity.ok(response);
     }
 }

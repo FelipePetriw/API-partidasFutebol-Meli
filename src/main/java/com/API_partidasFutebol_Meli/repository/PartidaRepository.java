@@ -1,6 +1,7 @@
 package com.API_partidasFutebol_Meli.repository;
 
 import com.API_partidasFutebol_Meli.entity.Clube;
+import com.API_partidasFutebol_Meli.entity.Estadio;
 import com.API_partidasFutebol_Meli.entity.Partida;
 import org.springframework.data.jpa.repository.JpaRepository;
 
