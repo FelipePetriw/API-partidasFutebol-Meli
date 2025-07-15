@@ -6,7 +6,10 @@ import com.API_partidasFutebol_Meli.entity.Clube;
 import com.API_partidasFutebol_Meli.entity.Estadio;
 import com.API_partidasFutebol_Meli.entity.Partida;
 import com.API_partidasFutebol_Meli.exception.BadRequestException;
+import com.API_partidasFutebol_Meli.exception.ConflictException;
 import com.API_partidasFutebol_Meli.exception.ResourceNotFoundException;
+import com.API_partidasFutebol_Meli.repository.ClubeRepository;
+import com.API_partidasFutebol_Meli.repository.EstadioRepository;
 import com.API_partidasFutebol_Meli.repository.PartidaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class PartidaService {
 
     private final PartidaRepository partidaRepository;
+    private final EstadioRepository estadioRepository;
+    private final ClubeRepository clubeRepository;
 
-    public PartidaService(PartidaRepository partidaRepository) {
+    public PartidaService(PartidaRepository partidaRepository, EstadioRepository estadioRepository, ClubeRepository clubeRepository) {
         this.partidaRepository = partidaRepository;
+        this.estadioRepository = estadioRepository;
+        this.clubeRepository = clubeRepository;
     }
 
     @Transactional
