@@ -34,4 +34,10 @@ public class PartidaController {
         service.remover(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PartidaResponseDTO> buscarPorId(@PathVariable Long id) {
+        var response = service.buscarPorId(id);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -11,6 +11,8 @@ import com.API_partidasFutebol_Meli.exception.ResourceNotFoundException;
 import com.API_partidasFutebol_Meli.repository.ClubeRepository;
 import com.API_partidasFutebol_Meli.repository.EstadioRepository;
 import com.API_partidasFutebol_Meli.repository.PartidaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.AbstractPersistable_;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -151,10 +153,26 @@ public class PartidaService {
         );
     }
 
-        @Transactional
-        public void remover(Long id) {
+    @Transactional
+    public void remover(Long id) {
             Partida partida = partidaRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Partida não encontrada."));
             partidaRepository.delete(partida);
+    }
+
+    @Transactional(readOnly = true)
+    public PartidaResponseDTO buscarPorId(Long id) {
+        Partida partida = partidaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Partida não encontrada."));
+
+        return new PartidaResponseDTO(
+                partida.getId(),
+                partida.getClubeMandante().getNome(),
+                partida.getClubeVisitante().getNome(),
+                partida.getEstadio().getNome(),
+                partida.getDataHora(),
+                partida.getGolsMandante(),
+                partida.getGolsVisitante()
+        );
     }
 }
