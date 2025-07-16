@@ -1,9 +1,14 @@
 package com.API_partidasFutebol_Meli.controller;
 
+import com.API_partidasFutebol_Meli.dto.PartidaFiltroDTO;
 import com.API_partidasFutebol_Meli.dto.PartidaRequestDTO;
 import com.API_partidasFutebol_Meli.dto.PartidaResponseDTO;
 import com.API_partidasFutebol_Meli.service.PartidaService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +44,25 @@ public class PartidaController {
     public ResponseEntity<PartidaResponseDTO> buscarPorId(@PathVariable Long id) {
         var response = service.buscarPorId(id);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<PartidaResponseDTO>> listar(
+        @RequestParam(required = false)
+        Long clubeId,
+
+        @RequestParam(required = false)
+        Long estadioId,
+
+        @RequestParam(required = false)
+        Boolean goleada,
+
+        @PageableDefault(size = 10, sort = "dataHora", direction = Sort.Direction.DESC)
+        Pageable pageable
+        ){
+
+        PartidaFiltroDTO filtro = new PartidaFiltroDTO(clubeId, estadioId, goleada);
+        var page = service.listar(filtro, pageable);
+        return ResponseEntity.ok(page);
     }
 }

@@ -1,5 +1,6 @@
 package com.API_partidasFutebol_Meli.service;
 
+import com.API_partidasFutebol_Meli.dto.PartidaFiltroDTO;
 import com.API_partidasFutebol_Meli.dto.PartidaRequestDTO;
 import com.API_partidasFutebol_Meli.dto.PartidaResponseDTO;
 import com.API_partidasFutebol_Meli.entity.Clube;
@@ -14,6 +15,7 @@ import com.API_partidasFutebol_Meli.repository.PartidaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.AbstractPersistable_;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -174,5 +176,41 @@ public class PartidaService {
                 partida.getGolsMandante(),
                 partida.getGolsVisitante()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PartidaResponseDTO> listar(PartidaFiltroDTO filtro, Pageable pageable) {
+        Specification<Partida> spec = ((root, query, criteriaBuilder) -> null);
+
+        if (filtro.clubeId() != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.or(
+                    criteriaBuilder.equal(root.get("clubeMandante").get("id"), filtro.clubeId()),
+                    criteriaBuilder.equal(root.get("clubeVisitante").get("id"), filtro.clubeId())
+            ));
+        }
+
+        if (filtro.estadioId() != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(
+                    root.get("estadio").get("id"), filtro.estadioId()
+            ));
+        }
+
+        if (Boolean.TRUE.equals(filtro.goleada())) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.or(
+                    criteriaBuilder.ge(criteriaBuilder.diff(root.get("golsMandante"), root.get("golsVisitante")), 3),
+                    criteriaBuilder.ge(criteriaBuilder.diff(root.get("golsVisitante"), root.get("golsMandante")), 3)
+            ));
+        }
+
+        return partidaRepository.findAll(spec, pageable)
+                .map(p -> new PartidaResponseDTO(
+                        p.getId(),
+                        p.getClubeMandante().getNome(),
+                        p.getClubeVisitante().getNome(),
+                        p.getEstadio().getNome(),
+                        p.getDataHora(),
+                        p.getGolsMandante(),
+                        p.getGolsVisitante()
+                ));
     }
 }
