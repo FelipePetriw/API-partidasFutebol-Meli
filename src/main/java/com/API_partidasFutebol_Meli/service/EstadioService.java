@@ -6,6 +6,8 @@ import com.API_partidasFutebol_Meli.entity.Estadio;
 import com.API_partidasFutebol_Meli.exception.RecursoDuplicadoException;
 import com.API_partidasFutebol_Meli.exception.ResourceNotFoundException;
 import com.API_partidasFutebol_Meli.repository.EstadioRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,5 +56,10 @@ public class EstadioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Estádio não encontrado."));
 
         return new EstadioResponseDTO(estadio.getId(), estadio.getNome());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<EstadioResponseDTO> listarTodos(Pageable pageable) {
+        return estadioRepository.findAll(pageable).map(estadio -> new EstadioResponseDTO(estadio.getId(), estadio.getNome()));
     }
 }
