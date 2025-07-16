@@ -28,4 +28,10 @@ public class PartidaController {
         var response = service.atualizar(id, dto);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remover(@PathVariable Long id) {
+        service.remover(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -85,6 +85,7 @@ public class PartidaService {
         );
     }
 
+    @Transactional
     public PartidaResponseDTO atualizar(Long id, PartidaRequestDTO dto) {
         Partida partida = partidaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Partida não encontrada."));
@@ -148,5 +149,12 @@ public class PartidaService {
                 salvo.getGolsMandante(),
                 salvo.getGolsVisitante()
         );
+    }
+
+        @Transactional
+        public void remover(Long id) {
+            Partida partida = partidaRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Partida não encontrada."));
+            partidaRepository.delete(partida);
     }
 }
