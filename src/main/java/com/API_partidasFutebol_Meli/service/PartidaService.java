@@ -14,6 +14,10 @@ import com.API_partidasFutebol_Meli.repository.PartidaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 public class PartidaService {
 
@@ -44,7 +48,7 @@ public class PartidaService {
             throw new ConflictException("Partida não pode ser cadastrada com clube inativo.");
         }
 
-        if (dto.dataHora().isBefore(mandante.getDataCriacao()) || dto.dataHora().isBefore(visitante.getDataCriacao())) {
+        if (dto.dataHora().isBefore(mandante.getDataCriacao().atStartOfDay()) || dto.dataHora().isBefore(visitante.getDataCriacao().atStartOfDay())) {
             throw new ConflictException("Data da partida anterior à criação de um dos clubes.");
         }
 
@@ -66,7 +70,72 @@ public class PartidaService {
         partida.setClubeMandante(mandante);
         partida.setClubeVisitante(visitante);
         partida.setEstadio(estadio);
-        partida.setDataHora(dto.dataHora().atStartOfDay());
+        partida.setDataHora(dto.dataHora());
+        partida.setGolsMandante(dto.golsMandante());
+        partida.setGolsVisitante(dto.golsVisitante());
+
+        var salvo = partidaRepository.save(partida);
+        return new PartidaResponseDTO(
+                salvo.getId(),
+                mandante.getNome(),
+                visitante.getNome(),
+                estadio.getNome(),
+                salvo.getDataHora(),
+                salvo.getGolsMandante(),
+                salvo.getGolsVisitante()
+        );
+    }
+
+    public PartidaResponseDTO atualizar(PartidaRequestDTO dto) {
+        Partida partida = partidaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Partida não encontrada."));
+
+        if (dto.clubeMandanteId().equals(dto.clubeVisitanteId())) {
+            throw new BadRequestException("Clube mandante e visitante não podem ser iguais.");
+        }
+
+        Clube mandante = clubeRepository.findById(dto.clubeMandanteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Clube mandante não encontrado."));
+        Clube visitante = clubeRepository.findById(dto.clubeVisitanteId())
+                .orElseThrow(() -> new ResourceNotFoundException("Clube visitante não encontrado."));
+        Estadio estadio = estadioRepository.findById(dto.estadioId())
+                .orElseThrow(() -> new ResourceNotFoundException("Estádio não encontrado."));
+
+        if(!mandante.getAtivo() || !visitante.getAtivo()){
+            throw new ConflictException("Partida não pode ser cadastrada com clube inativo.");
+        }
+
+        if (dto.dataHora().isBefore(mandante.getDataCriacao().atStartOfDay()) || dto.dataHora().isBefore(visitante.getDataCriacao().atStartOfDay())) {
+            throw new ConflictException("Data da partida anterior à criação de um dos clubes.");
+        }
+
+        LocalDateTime inicio = dto.dataHora().minusHours(48);
+        LocalDateTime fim = dto.dataHora().plusHours(48);
+
+        boolean conflitoHorario = partidaRepository.findAll().stream().anyMatch(p ->
+                (p.getClubeMandante().getId().equals(mandante.getId()) || p.getClubeVisitante().getId().equals(mandante.getId()) ||
+                                p.getClubeMandante().getId().equals(visitante.getId()) || p.getClubeVisitante().getId().equals(visitante.getId())) &&
+                                (p.getDataHora().isAfter(inicio) && p.getDataHora().isBefore(fim))
+                );
+
+        if (conflitoHorario) {
+            throw new ConflictException("Conflito de horário com outra partida dos clubes.");
+        }
+
+        boolean estadioOcupado = partidaRepository.findAll().stream().filter(
+                p -> !p.getId().equals(id)).anyMatch(p ->
+                            p.getEstadio().getId().equals(estadio.getId()) &&
+                                    p.getDataHora().toLocalDate().equals(dto.dataHora().toLocalDate())
+                        );
+
+        if (estadioOcupado) {
+            throw new ConflictException("Já existe partida nesse estadio no mesmo dia.");
+        }
+
+        partida.setClubeMandante(mandante);
+        partida.setClubeVisitante(visitante);
+        partida.setEstadio(estadio);
+        partida.setDataHora(dto.dataHora());
         partida.setGolsMandante(dto.golsMandante());
         partida.setGolsVisitante(dto.golsVisitante());
 

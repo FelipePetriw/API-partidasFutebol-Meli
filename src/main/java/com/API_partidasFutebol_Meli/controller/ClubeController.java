@@ -32,7 +32,7 @@ public class ClubeController {
     }
 
     @PutMapping("/id")
-    public ResponseEntity<ClubeResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid ClubeUpdateDTO dto) throws BadRequestException {
+    public ResponseEntity<ClubeResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid ClubeUpdateDTO dto) {
         var response = service.atualizar(id, dto);
         return ResponseEntity.ok(response);
     }
