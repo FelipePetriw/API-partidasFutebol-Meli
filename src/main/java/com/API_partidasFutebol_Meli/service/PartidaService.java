@@ -11,12 +11,11 @@ import com.API_partidasFutebol_Meli.exception.ResourceNotFoundException;
 import com.API_partidasFutebol_Meli.repository.ClubeRepository;
 import com.API_partidasFutebol_Meli.repository.EstadioRepository;
 import com.API_partidasFutebol_Meli.repository.PartidaRepository;
+import org.springframework.data.jpa.domain.AbstractPersistable_;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class PartidaService {
@@ -86,7 +85,7 @@ public class PartidaService {
         );
     }
 
-    public PartidaResponseDTO atualizar(PartidaRequestDTO dto) {
+    public PartidaResponseDTO atualizar(Long id, PartidaRequestDTO dto) {
         Partida partida = partidaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Partida não encontrada."));
 
@@ -123,7 +122,7 @@ public class PartidaService {
         }
 
         boolean estadioOcupado = partidaRepository.findAll().stream().filter(
-                p -> !p.getId().equals(id)).anyMatch(p ->
+                p -> !p.getId().equals(AbstractPersistable_.id)).anyMatch(p ->
                             p.getEstadio().getId().equals(estadio.getId()) &&
                                     p.getDataHora().toLocalDate().equals(dto.dataHora().toLocalDate())
                         );
