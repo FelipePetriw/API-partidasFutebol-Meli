@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/clubes")
 public class ClubeController {
@@ -62,6 +64,12 @@ public class ClubeController {
     @GetMapping("/{id}/retrospecto")
     public ResponseEntity<RetrospectoDTO> retrospectoGeral(@PathVariable Long id) {
         var response = service.retrospectoGeral(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/retrospecto/adversarios")
+    public ResponseEntity<List<RetrospectoAdversarioDTO>> retrospectoPorAdversario(@PathVariable Long id) {
+        var response = service.retrospctoPorAdversario(id);
         return ResponseEntity.ok(response);
     }
 }

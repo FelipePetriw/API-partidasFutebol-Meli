@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ClubeService {
@@ -142,5 +145,45 @@ public class ClubeService {
         }
 
         return new RetrospectoDTO(clubeId, clube.getNome(), vitorias, empates, derrotas, golsFeitos, golsSofridos);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RetrospectoAdversarioDTO> retrospctoPorAdversario(Long clubeId) {
+        Clube clube = clubeRepository.findById(clubeId).orElseThrow(
+                () -> new ResourceNotFoundException("Clube não encontrado.")
+        );
+
+        List<Partida> partidas = partidaRepository.findAll().stream().filter(
+                partida -> partida.getClubeMandante().getId().equals(clubeId)
+                        || partida.getClubeVisitante().getId().equals(clubeId)).toList();
+
+        Map<String, int[]> estatisticas = new HashMap<>();
+
+        for (Partida partida : partidas) {
+            boolean mandante = partida.getClubeMandante().getId().equals(clubeId);
+            String adversario = mandante ? partida.getClubeVisitante().getNome() : partida.getClubeMandante().getNome();
+            int golsPro = mandante ? partida.getGolsMandante() : partida.getGolsVisitante();
+            int golsContra = mandante ? partida.getGolsVisitante() : partida.getGolsMandante();
+
+            estatisticas.putIfAbsent(adversario, new int[5]);
+
+            int[] dados = estatisticas.get(adversario);
+            dados[0] += golsPro > golsContra ? 1 : 0; //Para considerar vitórias
+            dados[1] += golsPro == golsContra ? 1 : 0; //Para considerar empates
+            dados[2] += golsPro < golsContra ? 1 : 0; //Para considerar derrotas
+            dados[3] += golsPro; //Marca os gols feitos
+            dados[4] += golsContra; //Marca os gols sofridos
+        }
+
+        return estatisticas.entrySet().stream().map(
+                e -> new RetrospectoAdversarioDTO(
+                        e.getKey(),
+                        e.getValue()[0],
+                        e.getValue()[1],
+                        e.getValue()[2],
+                        e.getValue()[3],
+                        e.getValue()[4]
+                )
+        ).sorted(Comparator.comparing(RetrospectoAdversarioDTO::adversario)).toList();
     }
 }
