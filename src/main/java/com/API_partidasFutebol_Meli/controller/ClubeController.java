@@ -1,9 +1,6 @@
 package com.API_partidasFutebol_Meli.controller;
 
-import com.API_partidasFutebol_Meli.dto.ClubeFiltroDTO;
-import com.API_partidasFutebol_Meli.dto.ClubeRequestDTO;
-import com.API_partidasFutebol_Meli.dto.ClubeResponseDTO;
-import com.API_partidasFutebol_Meli.dto.ClubeUpdateDTO;
+import com.API_partidasFutebol_Meli.dto.*;
 import com.API_partidasFutebol_Meli.service.ClubeService;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
@@ -60,5 +57,11 @@ public class ClubeController {
         var page = service.listar(filtros, pageable);
 
         return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/{id}/retrospecto")
+    public ResponseEntity<RetrospectoDTO> retrospectoGeral(@PathVariable Long id) {
+        var response = service.retrospectoGeral(id);
+        return ResponseEntity.ok(response);
     }
 }

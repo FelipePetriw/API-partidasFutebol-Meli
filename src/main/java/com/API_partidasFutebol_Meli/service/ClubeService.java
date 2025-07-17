@@ -15,16 +15,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class ClubeService {
 
     private final ClubeRepository repository;
     private final ClubeRepository clubeRepository;
+    private final PartidaRepository partidaRepository;
 
-    public ClubeService(ClubeRepository repository, ClubeRepository clubeRepository) {
+    public ClubeService(ClubeRepository repository, ClubeRepository clubeRepository, PartidaRepository partidaRepository) {
         this.repository = repository;
         this.clubeRepository = clubeRepository;
+        this.partidaRepository = partidaRepository;
     }
 
     @Transactional
@@ -111,5 +114,33 @@ public class ClubeService {
                 clube.getAtivo()
 
         ));
+    }
+
+    @Transactional(readOnly = true)
+    public RetrospectoDTO retrospectoGeral(Long clubeId) {
+        Clube clube = clubeRepository.findById(clubeId).orElseThrow(
+                () -> new ResourceNotFoundException("Clube não encontrado.")
+        );
+
+        List<Partida> partidas = partidaRepository.findAll().stream().filter(
+                partida -> partida.getClubeMandante().getId().equals(clubeId)
+                        || partida.getClubeVisitante().getId().equals(clubeId)).toList();
+
+        int vitorias = 0, empates = 0, derrotas = 0, golsFeitos = 0, golsSofridos = 0;
+
+        for (Partida partida : partidas) {
+            boolean mandante = partida.getClubeMandante().getId().equals(clubeId);
+            int golsPro = mandante ? partida.getGolsMandante() : partida.getGolsVisitante();
+            int golsContra = mandante ? partida.getGolsVisitante() : partida.getGolsMandante();
+
+            golsFeitos += golsPro;
+            golsSofridos += golsContra;
+
+            if (golsPro > golsContra) vitorias++;
+            else if (golsPro < golsContra) derrotas++;
+            else empates++;
+        }
+
+        return new RetrospectoDTO(clubeId, clube.getNome(), vitorias, empates, derrotas, golsFeitos, golsSofridos);
     }
 }
