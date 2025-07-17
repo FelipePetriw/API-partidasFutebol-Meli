@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ClubeService {
@@ -148,7 +145,7 @@ public class ClubeService {
     }
 
     @Transactional(readOnly = true)
-    public List<RetrospectoAdversarioDTO> retrospctoPorAdversario(Long clubeId) {
+    public List<RetrospectoAdversarioDTO> retrospectoPorAdversario(Long clubeId) {
         Clube clube = clubeRepository.findById(clubeId).orElseThrow(
                 () -> new ResourceNotFoundException("Clube não encontrado.")
         );
@@ -185,5 +182,62 @@ public class ClubeService {
                         e.getValue()[4]
                 )
         ).sorted(Comparator.comparing(RetrospectoAdversarioDTO::adversario)).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public ConfrontoDiretoDTO confrontoPorDireto(Long clube1Id, Long clube2Id) {
+        Clube clube1 = clubeRepository.findById(clube1Id).orElseThrow(
+                () -> new ResourceNotFoundException("Clube 1 não encontrado."));
+        Clube clube2 = clubeRepository.findById(clube2Id).orElseThrow(
+                () -> new ResourceNotFoundException("Clube 2 não encontrado."));
+
+        List<Partida> partidas = partidaRepository.findAll().stream().filter(
+                partida -> {
+                    Long mandante = partida.getClubeMandante().getId();
+                    Long visitante = partida.getClubeVisitante().getId();
+                    return (mandante.equals(clube1Id) && visitante.equals(clube2Id))
+                            || (mandante.equals(clube2Id) && visitante.equals(clube1Id));
+                }).toList();
+
+        List<ConfrontoPartidaDTO> listaPartidas = new ArrayList<>();
+        int[] stats1 = new int[5];
+        int[] stats2 = new int[5];
+
+        for (Partida partida : partidas) {
+            boolean clube1Mandante = partida.getClubeMandante().getId().equals(clube1Id);
+            boolean clube1Jogou = clube1Mandante || partida.getClubeVisitante().getId().equals(clube1Id);
+
+            int golsClube1 = clube1Mandante ? partida.getGolsMandante() : partida.getGolsVisitante();
+            int golsClube2 = clube1Mandante ? partida.getGolsVisitante() : partida.getGolsMandante();
+
+            if (clube1Jogou) {
+                stats1[0] += golsClube1 > golsClube2 ? 1 : 0;
+                stats1[1] += golsClube1 == golsClube2 ? 1 : 0;
+                stats1[2] += golsClube1 < golsClube2 ? 1 : 0;
+                stats1[3] += golsClube1;
+                stats1[4] += golsClube2;
+
+                stats2[0] += golsClube2 > golsClube1 ? 1 : 0;
+                stats2[1] += golsClube2 == golsClube1 ? 1 : 0;
+                stats2[2] += golsClube2 < golsClube1 ? 1 : 0;
+                stats2[3] += golsClube2;
+                stats2[4] += golsClube1;
+            }
+
+            listaPartidas.add(new ConfrontoPartidaDTO(
+                    partida.getDataHora(),
+                    partida.getEstadio().getNome(),
+                    partida.getClubeMandante().getNome(),
+                    partida.getClubeVisitante().getNome(),
+                    partida.getGolsMandante(),
+                    partida.getGolsVisitante()
+            ));
+        }
+
+        return new ConfrontoDiretoDTO(
+                listaPartidas,
+                new ConfrontoResumoDTO(clube1.getNome(), stats1[0], stats1[1], stats1[2], stats1[3], stats1[4]),
+                new ConfrontoResumoDTO(clube2.getNome(), stats2[0], stats2[1], stats2[2], stats2[3], stats2[4] )
+        );
     }
 }

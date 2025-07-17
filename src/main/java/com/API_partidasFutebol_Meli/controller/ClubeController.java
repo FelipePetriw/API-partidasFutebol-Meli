@@ -3,13 +3,11 @@ package com.API_partidasFutebol_Meli.controller;
 import com.API_partidasFutebol_Meli.dto.*;
 import com.API_partidasFutebol_Meli.service.ClubeService;
 import jakarta.validation.Valid;
-import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,7 +67,16 @@ public class ClubeController {
 
     @GetMapping("/{id}/retrospecto/adversarios")
     public ResponseEntity<List<RetrospectoAdversarioDTO>> retrospectoPorAdversario(@PathVariable Long id) {
-        var response = service.retrospctoPorAdversario(id);
+        var response = service.retrospectoPorAdversario(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/confronto")
+    public ResponseEntity<ConfrontoDiretoDTO> confronto(
+            @RequestParam Long clube1,
+            @RequestParam Long clube2) {
+        var response = service.confrontoPorDireto(clube1, clube2);
+
         return ResponseEntity.ok(response);
     }
 }
