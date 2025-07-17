@@ -240,4 +240,59 @@ public class ClubeService {
                 new ConfrontoResumoDTO(clube2.getNome(), stats2[0], stats2[1], stats2[2], stats2[3], stats2[4] )
         );
     }
+
+    @Transactional(readOnly = true)
+    public List<ClubeRankingDTO> ranking(String criterio) {
+        List<Clube> clubes = clubeRepository.findAll();
+        List<Partida> partidas = partidaRepository.findAll();
+
+        Map<String, int[]> stats = new HashMap<>(); //Buca o clube trazendo (pontos, gols, vitórias e jogos)
+
+        for (Partida partida : partidas) {
+            String mandante = partida.getClubeMandante().getNome();
+            String visitante = partida.getClubeVisitante().getNome();
+            int gm = partida.getGolsMandante();
+            int gv = partida.getGolsVisitante();
+
+            //Mandante
+            stats.putIfAbsent(mandante, new int[4]);
+            stats.get(mandante)[1] += gm; //Apresenta os gols
+            stats.get(mandante)[3] += 1; //Apresenta os jogos
+
+            if (gm > gv) stats.get(mandante)[0] += 3; //Acrescenta os Pontos
+            else if(gm == gv) stats.get(mandante)[0] += 1;
+
+            if (gm >gv) stats.get(mandante)[2] += 1;
+
+            //Visitantes
+            stats.putIfAbsent(visitante, new int[4]);
+            stats.get(visitante)[1] += gv;
+            stats.get(visitante)[3] += 1;
+
+            if (gv > gm) stats.get(visitante)[0] += 3;
+            else if(gv == gm) stats.get(visitante)[0] += 1;
+
+            if (gv > gm) stats.get(visitante)[2] += 1;
+        }
+
+        List<ClubeRankingDTO> lista = stats.entrySet().stream().map(
+                e -> new ClubeRankingDTO(e.getKey(), e.getValue()[0], e.getValue()[1], e.getValue()[2], e.getValue()[3]))
+                .filter(dto -> switch (criterio.toLowerCase()) {
+                    case "pontos" -> dto.pontos() > 0;
+                    case "gols" -> dto.gols() > 0;
+                    case "vitorias" -> dto.vitorias() > 0;
+                    case "jogos" -> dto.jogos() > 0;
+                    default -> throw new BadRequestException("Critério inválido. Use: pontos, gols, vitorias, jogos");
+                })
+                .sorted(switch (criterio.toLowerCase()) {
+                    case "pontos" -> Comparator.comparingInt(ClubeRankingDTO::pontos).reversed();
+                    case "gols" -> Comparator.comparingInt(ClubeRankingDTO::gols).reversed();
+                    case "vitorias" -> Comparator.comparingInt(ClubeRankingDTO::vitorias).reversed();
+                    case "jogos" -> Comparator.comparingInt(ClubeRankingDTO::jogos).reversed();
+                    default -> throw new BadRequestException("Critério inválido.");
+                })
+                .toList();
+
+        return lista;
+    }
 }

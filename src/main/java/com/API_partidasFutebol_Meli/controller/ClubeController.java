@@ -79,4 +79,10 @@ public class ClubeController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/ranking")
+    public ResponseEntity<List<ClubeRankingDTO>> ranking(@RequestParam String criterio) {
+        var response = service.ranking(criterio);
+        return ResponseEntity.ok(response);
+    }
 }
