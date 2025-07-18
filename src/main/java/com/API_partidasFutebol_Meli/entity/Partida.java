@@ -88,4 +88,17 @@ public class Partida {
     public void setGolsVisitante(Integer golsVisitante) {
         this.golsVisitante = golsVisitante;
     }
+
+    public Partida() {}
+
+
+    public Partida(long l, Clube clube1, Clube clube2, Object o, LocalDateTime localDateTime, int i, int i1) {
+        this.id = l;
+        this.clubeMandante = clube1;
+        this.clubeVisitante = clube2;
+        this.estadio = (Estadio) o;
+        this.dataHora = localDateTime;
+        this.golsMandante = i;
+        this.golsVisitante = i1;
+    }
 }
