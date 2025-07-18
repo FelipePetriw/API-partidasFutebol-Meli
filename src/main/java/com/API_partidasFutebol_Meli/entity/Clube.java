@@ -65,4 +65,14 @@ public class Clube {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
+
+    public Clube() {}
+
+    public Clube(Long id, String nome, String siglaEstado, LocalDate dataCriacao, Boolean ativo) {
+        this.id = id;
+        this.nome = nome;
+        this.siglaEstado = siglaEstado;
+        this.dataCriacao = dataCriacao;
+        this.ativo = ativo;
+    }
 }
