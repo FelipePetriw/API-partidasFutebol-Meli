@@ -32,6 +32,11 @@ public class ClubeService {
 
     @Transactional
     public ClubeResponseDTO criar(ClubeRequestDTO dto) {
+
+        if (dto.dataCriacao().isAfter(LocalDate.now())) {
+            throw new BadRequestException("data de criação não pode ser futura.");
+        }
+
         repository.findByNomeAndSiglaEstado(dto.nome(),  dto.siglaEstado()).ifPresent(c -> {
             throw new RecursoDuplicadoException("Já existe um clube com este nome neste estado.");
         });
@@ -50,14 +55,14 @@ public class ClubeService {
     public ClubeResponseDTO atualizar(Long id, ClubeUpdateDTO dto) throws BadRequestException {
         Clube clube = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Clube não encontrado."));
 
+        if (dto.dataCriacao().isAfter(LocalDate.now())) {
+            throw new BadRequestException("Data de criação não pode ser futura.");
+        }
+
         if (clube.getNome().equals(dto.nome()) || !clube.getSiglaEstado().equals(dto.siglaEstado()))
             repository.findByNomeAndSiglaEstado(dto.nome(), dto.siglaEstado()).ifPresent(c -> {
                 throw new RecursoDuplicadoException("Já existe um clube com este nome neste estado.");
             });
-
-        if (dto.dataCriacao().isAfter(LocalDate.now())) {
-            throw new BadRequestException("Data de criação não pode ser futura.");
-        }
 
         clube.setNome(dto.nome());
         clube.setSiglaEstado(dto.siglaEstado());
