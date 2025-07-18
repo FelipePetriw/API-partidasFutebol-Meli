@@ -1,4 +1,4 @@
-package com.API_partidasFutebol_Meli.controlerTest;
+package com.API_partidasFutebol_Meli.controllerTest;
 
 import com.API_partidasFutebol_Meli.controller.EstadioController;
 import com.API_partidasFutebol_Meli.dto.EstadioRequestDTO;
