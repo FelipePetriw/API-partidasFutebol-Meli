@@ -1,4 +1,4 @@
-package com.API_partidasFutebol_Meli;
+package com.API_partidasFutebol_Meli.serviceTest;
 
 import com.API_partidasFutebol_Meli.dto.ClubeRequestDTO;
 import com.API_partidasFutebol_Meli.entity.Clube;
