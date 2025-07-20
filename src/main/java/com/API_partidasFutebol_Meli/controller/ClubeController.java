@@ -85,4 +85,9 @@ public class ClubeController {
         var response = service.ranking(criterio);
         return ResponseEntity.ok(response);
     }
+
+    public ResponseEntity<ClubeResponseDTO> editar(long id, ClubeUpdateDTO dto) {
+        ClubeResponseDTO responseDTO = (ClubeResponseDTO) service.editar(id, dto);
+        return ResponseEntity.ok(responseDTO);
+    }
 }

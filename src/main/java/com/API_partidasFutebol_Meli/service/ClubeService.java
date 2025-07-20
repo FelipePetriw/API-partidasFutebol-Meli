@@ -300,4 +300,8 @@ public class ClubeService {
 
         return lista;
     }
+
+    public Object editar(long l, ClubeUpdateDTO dto) {
+        return null;
+    }
 }
