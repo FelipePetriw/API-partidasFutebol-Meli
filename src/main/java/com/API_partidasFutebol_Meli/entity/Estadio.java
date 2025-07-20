@@ -13,6 +13,11 @@ public class Estadio {
     @Column(nullable = false, unique = true)
     private String nome;
 
+    public Estadio(long id, String nome, String sp, int i) {
+        this.id = id;
+        this.nome = nome;
+    }
+
     public Long getId() {
         return id;
     }
