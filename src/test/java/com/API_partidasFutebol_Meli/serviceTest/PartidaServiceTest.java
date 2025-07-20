@@ -6,6 +6,7 @@ import com.API_partidasFutebol_Meli.entity.Clube;
 import com.API_partidasFutebol_Meli.entity.Estadio;
 import com.API_partidasFutebol_Meli.entity.Partida;
 import com.API_partidasFutebol_Meli.exception.BadRequestException;
+import com.API_partidasFutebol_Meli.exception.ResourceNotFoundException;
 import com.API_partidasFutebol_Meli.repository.ClubeRepository;
 import com.API_partidasFutebol_Meli.repository.EstadioRepository;
 import com.API_partidasFutebol_Meli.repository.PartidaRepository;
@@ -23,7 +24,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -41,12 +42,12 @@ public class PartidaServiceTest {
     @InjectMocks
     private PartidaService partidaService;
 
+    Clube mandante = new Clube(1L, "Time A", "SP", LocalDate.of(2000, 1, 1), true);
+    Clube visitante = new Clube(2L, "Time B", "RJ", LocalDate.of(2001, 1, 1), true);
+    Estadio estadio = new Estadio(1L, "Estadio X");
+
     @Test
     void deveCadastrarPartidaComSucesso() {
-
-        Clube mandante = new Clube(1L, "Time A", "SP", LocalDate.of(2000, 1, 1), true);
-        Clube visitante = new Clube(2L, "Time B", "RJ", LocalDate.of(2001, 1, 1), true);
-        Estadio estadio = new Estadio(1L, "Estadio X");
 
         PartidaRequestDTO dto = new PartidaRequestDTO(
                 1L, 2L, 1L,
@@ -75,5 +76,48 @@ public class PartidaServiceTest {
     void naoDeveCadastrarPartidaComClubesIguais() {
         PartidaRequestDTO dto = new PartidaRequestDTO(1L, 1L, 1L, LocalDateTime.now(), 1, 1);
         assertThrows(BadRequestException.class, () -> partidaService.cadastrar(dto));
+    }
+
+    @Test
+    void deveLancarBadRequestQuandoClubesForemIguais() {
+        PartidaRequestDTO dto = new PartidaRequestDTO(1L, 1L, 1L, LocalDateTime.now(), 0, 0);
+        assertThrows(BadRequestException.class, () -> partidaService.cadastrar(dto));
+    }
+
+    @Test
+    void deveLancarExceptionSeClubeMandanteNaoEncontrado() {
+        PartidaRequestDTO dto = new PartidaRequestDTO(99L, 2L, 1L, LocalDateTime.now(), 0, 0);
+        when(clubeRepository.findById(99L)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> partidaService.cadastrar(dto));
+    }
+
+    @Test
+    void deveRemoverPartida() {
+        Partida partida = new Partida();
+        partida.setId(123L);
+        when(partidaRepository.findById(123L)).thenReturn(Optional.of(partida));
+
+        partidaService.remover(123L);
+
+        verify(partidaRepository, times(1)).delete(partida);
+    }
+
+    @Test
+    void deveBuscarPartidaPorId() {
+        Partida partida = new Partida();
+        partida.setId(99L);
+        partida.setClubeMandante(mandante);
+        partida.setClubeVisitante(visitante);
+        partida.setEstadio(estadio);
+        partida.setDataHora(LocalDateTime.now());
+        partida.setGolsMandante(3);
+        partida.setGolsVisitante(2);
+
+        when(partidaRepository.findById(99L)).thenReturn(Optional.of(partida));
+
+        PartidaResponseDTO response = partidaService.buscarPorId(99L);
+
+        assertEquals(3, response.golsMandante());
+        assertEquals("Time B", response.clubeVisitante());
     }
 }

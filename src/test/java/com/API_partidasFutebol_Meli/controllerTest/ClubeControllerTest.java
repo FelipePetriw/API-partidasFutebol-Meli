@@ -1,17 +1,19 @@
 package com.API_partidasFutebol_Meli.controllerTest;
 
 import com.API_partidasFutebol_Meli.controller.ClubeController;
-import com.API_partidasFutebol_Meli.dto.ClubeResponseDTO;
-import com.API_partidasFutebol_Meli.dto.ClubeUpdateDTO;
+import com.API_partidasFutebol_Meli.dto.*;
 import com.API_partidasFutebol_Meli.service.ClubeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -27,6 +29,17 @@ public class ClubeControllerTest {
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void deveCriarClube(){
+        ClubeRequestDTO dto = new ClubeRequestDTO("Time X", "SC", LocalDate.of(1900, 1, 1));
+        ClubeResponseDTO response = new ClubeResponseDTO(1L, "Time X", "SC", LocalDate.of(1900, 1, 1), true);
+        when(service.criar(dto)).thenReturn(response);
+
+        ResponseEntity<ClubeResponseDTO> result = controller.criar(dto);
+        assertEquals(201, result.getStatusCodeValue());
+        assertEquals("Time X", result.getBody().nome());
     }
 
     @Test
@@ -50,5 +63,42 @@ public class ClubeControllerTest {
         when(service.buscarPorId(1L)).thenReturn(response);
         ResponseEntity<ClubeResponseDTO> result = controller.buscarPorId(1L);
         assertEquals("Novo", result.getBody().nome());
+    }
+
+    @Test
+    void deveListarClubescomFiltro() {
+        ClubeFiltroDTO filtro = new ClubeFiltroDTO("Time", "SP", true);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("nome").ascending());
+        Page<ClubeResponseDTO> page = new PageImpl<>(List.of(
+                new ClubeResponseDTO(5L, "Time A", "SP", LocalDate.of(1980, 5, 1), true),
+                new ClubeResponseDTO(6L, "Time B", "SP", LocalDate.of(1900, 1, 1), true)
+        ));
+
+        when(service.listar(filtro, pageable)).thenReturn(page);
+
+        ResponseEntity<Page<ClubeResponseDTO>> result = controller.listar("Time", "SP", true, pageable);
+        assertEquals(2, result.getBody().getContent().size());
+    }
+
+    @Test
+    void deveRetornarRetrospectoGeral() {
+        RetrospectoDTO response = new RetrospectoDTO(10L,"Time", 5, 3, 2, 12, 8);
+        when(service.retrospectoGeral(7L)).thenReturn(response);
+
+        ResponseEntity<RetrospectoDTO> result = controller.retrospectoGeral(7L);
+        assertEquals(5L, result.getBody().vitorias());
+    }
+
+    @Test
+    void deveRetornarRetrospectoPorAdversario() {
+        List<RetrospectoAdversarioDTO> resposta = List.of(
+                new RetrospectoAdversarioDTO("Adversario X", 2, 1, 0, 3, 5),
+                new RetrospectoAdversarioDTO("Adversario Y", 1, 2, 1, 5, 3)
+        );
+
+        when(service.retrospectoPorAdversario(7L)).thenReturn(resposta);
+
+        ResponseEntity<List<RetrospectoAdversarioDTO>>  result = controller.retrospectoPorAdversario(7L);
+        assertEquals(2, result.getBody().size());
     }
 }

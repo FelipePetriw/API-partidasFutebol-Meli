@@ -8,4 +8,5 @@ public record RetrospectoDTO(
         int derrotas,
         int golsFeitos,
         int golsSofridos
-) {}
+) {
+}
