@@ -37,4 +37,18 @@ public class ClubeControllerTest {
         ResponseEntity<ClubeResponseDTO> result = controller.editar(1L, dto);
         assertEquals("Novo", result.getBody().nome());
     }
+
+    @Test
+    void deveInativarClube() {
+        ResponseEntity<Void> result = controller.inativar(2L);
+        assertEquals(204, result.getStatusCode().value());
+    }
+
+    @Test
+    void deveBuscarPorId() {
+        ClubeResponseDTO response = new ClubeResponseDTO(1L, "Novo", "SP", LocalDate.of(1990, 1, 1), true);
+        when(service.buscarPorId(1L)).thenReturn(response);
+        ResponseEntity<ClubeResponseDTO> result = controller.buscarPorId(1L);
+        assertEquals("Novo", result.getBody().nome());
+    }
 }
