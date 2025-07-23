@@ -49,6 +49,7 @@ public class ClubeControllerTest {
         when(service.editar(1L, dto)).thenReturn(response);
         ResponseEntity<ClubeResponseDTO> result = controller.editar(1L, dto);
         assertEquals("Novo", result.getBody().nome());
+        assertEquals("SP", result.getBody().siglaEstado());
     }
 
     @Test
@@ -63,6 +64,21 @@ public class ClubeControllerTest {
         when(service.buscarPorId(1L)).thenReturn(response);
         ResponseEntity<ClubeResponseDTO> result = controller.buscarPorId(1L);
         assertEquals("Novo", result.getBody().nome());
+    }
+
+    @Test
+    void deveRetornarConfrontoDireto() {
+        ConfrontoDiretoDTO response = new ConfrontoDiretoDTO(
+                List.of(), //Lista de Partidas
+                new ConfrontoResumoDTO("Clube A", 2, 1, 1, 5, 3),
+                new ConfrontoResumoDTO("Clube B", 1, 1, 2, 3, 5)
+        );
+
+        when(service.confrontoPorDireto(1L, 2L)).thenReturn(response);
+
+        ResponseEntity<ConfrontoDiretoDTO> result = controller.confronto(1L, 2L);
+        assertEquals("Clube A", result.getBody().clube1().nome());
+        assertEquals("Clube B", result.getBody().clube2().nome());
     }
 
     @Test
@@ -100,5 +116,19 @@ public class ClubeControllerTest {
 
         ResponseEntity<List<RetrospectoAdversarioDTO>>  result = controller.retrospectoPorAdversario(7L);
         assertEquals(2, result.getBody().size());
+    }
+
+    @Test
+    void deveRetornarRankingPorCriterio() {
+        List<ClubeRankingDTO> ranking = List.of(
+                new ClubeRankingDTO("Time A", 30, 25, 10, 15),
+                new ClubeRankingDTO("Time B", 30, 25, 10, 15)
+        );
+
+        when(service.ranking("pontos")).thenReturn(ranking);
+
+        ResponseEntity<List<ClubeRankingDTO>> result = controller.ranking("pontos");
+        assertEquals(2, result.getBody().size());
+        assertEquals("Time A", result.getBody().get(0).nome());
     }
 }

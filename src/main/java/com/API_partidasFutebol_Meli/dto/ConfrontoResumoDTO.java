@@ -8,4 +8,7 @@ public record ConfrontoResumoDTO(
         int golsFeitos,
         int golsSofridos
 ) {
+    public String nome() {
+        return clube;
+    }
 }

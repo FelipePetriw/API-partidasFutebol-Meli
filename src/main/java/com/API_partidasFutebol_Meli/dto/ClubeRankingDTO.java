@@ -6,4 +6,8 @@ public record ClubeRankingDTO(
         int gols,
         int vitorias,
         int jogos
-) {}
+) {
+    public String nome() {
+        return clube;
+    }
+}
