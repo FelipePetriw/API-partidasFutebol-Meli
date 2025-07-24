@@ -118,4 +118,17 @@ public class EstadioServiceTest {
         assertEquals(2, resultado.getContent().size());
         assertEquals("Arena Dois", resultado.getContent().get(1).nome());
     }
+
+    @Test
+    void deveLancarExceptionAoEditarComNomeDuplicadoDeOutroEstadio() {
+        Estadio original = new Estadio(1L, "Estádio Original", "SP", 25000);
+        Estadio duplicado = new Estadio(2L, "Estádio Duplicado", "SP", 25000);
+
+        when(estadioRepository.findById(1L)).thenReturn(Optional.of(original));
+        when(estadioRepository.findByNomeIgnoreCase("Estádio Duplicado")).thenReturn(Optional.of(duplicado));
+
+        EstadioRequestDTO dto = new EstadioRequestDTO("Estádio Duplicado");
+
+        assertThrows(RecursoDuplicadoException.class, () -> estadioService.editar(1L, dto));
+    }
 }
