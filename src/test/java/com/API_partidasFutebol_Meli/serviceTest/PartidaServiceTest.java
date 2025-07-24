@@ -1,5 +1,6 @@
 package com.API_partidasFutebol_Meli.serviceTest;
 
+import com.API_partidasFutebol_Meli.controller.EstadioController;
 import com.API_partidasFutebol_Meli.dto.PartidaFiltroDTO;
 import com.API_partidasFutebol_Meli.dto.PartidaRequestDTO;
 import com.API_partidasFutebol_Meli.dto.PartidaResponseDTO;
@@ -100,6 +101,52 @@ public class PartidaServiceTest {
     }
 
     @Test
+    void deveLancarExceptionSeEstadioNaoEncontrado() {
+        PartidaRequestDTO dto = new PartidaRequestDTO(1L, 2L, 99L, LocalDateTime.now(), 0, 0);
+        when(clubeRepository.findById(1L)).thenReturn(Optional.of(mandante));
+        when(clubeRepository.findById(2L)).thenReturn(Optional.of(visitante));
+        when(estadioRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> partidaService.cadastrar(dto));
+    }
+
+    @Test
+    void deveLancarConflictSeDataAnteriorACriacaoDoClube() {
+        PartidaRequestDTO dto = new PartidaRequestDTO(1L, 2L, 1L, LocalDateTime.of(
+                1990, 1 ,1, 12, 0), 1, 1);
+
+        when(clubeRepository.findById(1L)).thenReturn(Optional.of(mandante));
+        when(clubeRepository.findById(2L)).thenReturn(Optional.of(visitante));
+        when(estadioRepository.findById(1L)).thenReturn(Optional.of(estadio));
+
+        assertThrows(ConflictException.class, () -> partidaService.cadastrar(dto));
+    }
+
+    @Test
+    void deveLancarConflictSeConflitoDeHorario() {
+        PartidaRequestDTO dto = new PartidaRequestDTO(1L, 2L, 1L, LocalDateTime.now(), 1, 1);
+        when(clubeRepository.findById(1L)).thenReturn(Optional.of(mandante));
+        when(clubeRepository.findById(2L)).thenReturn(Optional.of(visitante));
+        when(estadioRepository.findById(1L)).thenReturn(Optional.of(estadio));
+        when(partidaRepository.existsByClubeMandanteOrClubeVisitanteAndDataHoraBetween(any(), any(), any(), any())).thenReturn(true);
+
+        assertThrows(ConflictException.class, () -> partidaService.cadastrar(dto));
+    }
+
+    @Test
+    void deveLancarConflictSeSeEstadioOcupado(){
+        PartidaRequestDTO dto = new PartidaRequestDTO(1L, 2L, 1L, LocalDateTime.now(), 1, 1);
+
+        when(clubeRepository.findById(1L)).thenReturn(Optional.of(mandante));
+        when(clubeRepository.findById(2L)).thenReturn(Optional.of(visitante));
+        when(estadioRepository.findById(1L)).thenReturn(Optional.of(estadio));
+        when(partidaRepository.existsByClubeMandanteOrClubeVisitanteAndDataHoraBetween(any(), any(), any(), any())).thenReturn(false);
+        when(partidaRepository.existsByEstadioAndDataHoraBetween(any(), any(), any())).thenReturn(true);
+
+        assertThrows(ConflictException.class, () -> partidaService.cadastrar(dto));
+    }
+
+    @Test
     void deveRemoverPartida() {
         Partida partida = new Partida();
         partida.setId(123L);
@@ -108,6 +155,12 @@ public class PartidaServiceTest {
         partidaService.remover(123L);
 
         verify(partidaRepository, times(1)).delete(partida);
+    }
+
+    @Test
+    void deveLancarExceptionAoRemoverPartidaInexistente() {
+        when(partidaRepository.findById(123L)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> partidaService.remover(123L));
     }
 
     @Test
@@ -127,6 +180,12 @@ public class PartidaServiceTest {
 
         assertEquals(3, response.golsMandante());
         assertEquals("Time B", response.clubeVisitante());
+    }
+
+    @Test
+    void deveLancarExceptionAoBuscarPartidaInexistente() {
+        when(partidaRepository.findById(99L)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> partidaService.buscarPorId(99L));
     }
 
     @Test

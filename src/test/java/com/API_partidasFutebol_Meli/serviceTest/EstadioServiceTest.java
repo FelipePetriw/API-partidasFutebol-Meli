@@ -1,11 +1,16 @@
 package com.API_partidasFutebol_Meli.serviceTest;
 
+import com.API_partidasFutebol_Meli.controller.EstadioController;
 import com.API_partidasFutebol_Meli.dto.EstadioRequestDTO;
 import com.API_partidasFutebol_Meli.dto.EstadioResponseDTO;
+import com.API_partidasFutebol_Meli.dto.PartidaRequestDTO;
+import com.API_partidasFutebol_Meli.entity.Clube;
 import com.API_partidasFutebol_Meli.entity.Estadio;
 import com.API_partidasFutebol_Meli.exception.RecursoDuplicadoException;
 import com.API_partidasFutebol_Meli.exception.ResourceNotFoundException;
+import com.API_partidasFutebol_Meli.repository.ClubeRepository;
 import com.API_partidasFutebol_Meli.repository.EstadioRepository;
+import com.API_partidasFutebol_Meli.repository.PartidaRepository;
 import com.API_partidasFutebol_Meli.service.EstadioService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
