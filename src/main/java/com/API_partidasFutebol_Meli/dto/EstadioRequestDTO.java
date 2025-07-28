@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Size;
 
 public record EstadioRequestDTO(
 
-        @NotBlank
-        @Size(min = 3)
+        @NotBlank(message = "Nome não pode ser vazio.")
+        @Size(min = 3, max = 100, message = "Deve ter entre 3 e 100 caracteres.")
         String nome
 ) {
 }

@@ -60,7 +60,7 @@ public class PartidaService {
         boolean conflitoHorario = partidaRepository.existsByClubeMandanteOrClubeVisitanteAndDataHoraBetween(mandante, visitante, inicio, fim);
 
         if (conflitoHorario) {
-            throw new ConflictException("Um dos clubes já tem partida próxima (menos de 48h");
+           throw new ConflictException("Um dos clubes já tem partida próxima (menos de 48h");
         }
 
         boolean estadioOcupado = partidaRepository.existsByEstadioAndDataHoraBetween(

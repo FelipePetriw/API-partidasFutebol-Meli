@@ -8,16 +8,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record PartidaRequestDTO(
-        @NotNull
+        @NotNull(message = "ID do clube mandante não pode ser nulo")
         Long clubeMandanteId,
 
-        @NotNull
+        @NotNull(message = "ID do clube visitante não pode ser nulo")
         Long clubeVisitanteId,
 
-        @NotNull
+        @NotNull(message = "ID do estádio não pode ser nulo")
         Long estadioId,
 
-        @NotNull
+        @NotNull(message = "Data e Hora não podem ser nulos")
         @PastOrPresent
         LocalDateTime dataHora,
 

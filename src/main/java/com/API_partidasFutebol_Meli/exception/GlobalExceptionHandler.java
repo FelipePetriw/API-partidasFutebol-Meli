@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.validation.FieldError;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -31,5 +33,17 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(ConflictException.class)
   public ResponseEntity<String> conflict(ConflictException ex) {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
+    StringBuilder sb = new StringBuilder("Erro de validação: ");
+    for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+      sb.append(error.getField())
+              .append(" - ")
+              .append(error.getDefaultMessage())
+              .append("; ");
+    }
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sb.toString());
   }
 }

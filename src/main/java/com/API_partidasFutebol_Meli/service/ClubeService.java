@@ -73,7 +73,7 @@ public class ClubeService {
 
     @Transactional
     public void inativar(Long id) {
-        Clube clube = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Clube não encontrado."));
+        Clube clube = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Clube não existe."));
 
         clube.setAtivo(false);
         repository.save(clube);
