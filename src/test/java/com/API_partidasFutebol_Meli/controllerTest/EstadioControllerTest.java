@@ -1,8 +1,8 @@
 package com.API_partidasFutebol_Meli.controllerTest;
 
 import com.API_partidasFutebol_Meli.controller.EstadioController;
-import com.API_partidasFutebol_Meli.dto.EstadioRequestDTO;
-import com.API_partidasFutebol_Meli.dto.EstadioResponseDTO;
+import com.API_partidasFutebol_Meli.dto.estadio.EstadioRequestDTO;
+import com.API_partidasFutebol_Meli.dto.estadio.EstadioResponseDTO;
 import com.API_partidasFutebol_Meli.service.EstadioService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 

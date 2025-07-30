@@ -1,10 +1,9 @@
 package com.API_partidasFutebol_Meli.dtoTest;
 
-import com.API_partidasFutebol_Meli.dto.ClubeUpdateDTO;
+import com.API_partidasFutebol_Meli.dto.clube.ClubeUpdateDTO;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

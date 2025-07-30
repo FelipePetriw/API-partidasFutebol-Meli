@@ -1,8 +1,8 @@
 package com.API_partidasFutebol_Meli.controller;
 
-import com.API_partidasFutebol_Meli.dto.PartidaFiltroDTO;
-import com.API_partidasFutebol_Meli.dto.PartidaRequestDTO;
-import com.API_partidasFutebol_Meli.dto.PartidaResponseDTO;
+import com.API_partidasFutebol_Meli.dto.partida.PartidaFiltroDTO;
+import com.API_partidasFutebol_Meli.dto.partida.PartidaRequestDTO;
+import com.API_partidasFutebol_Meli.dto.partida.PartidaResponseDTO;
 import com.API_partidasFutebol_Meli.service.PartidaService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

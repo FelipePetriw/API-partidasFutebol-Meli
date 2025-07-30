@@ -1,7 +1,11 @@
 package com.API_partidasFutebol_Meli.controllerTest;
 
 import com.API_partidasFutebol_Meli.controller.ClubeController;
-import com.API_partidasFutebol_Meli.dto.*;
+import com.API_partidasFutebol_Meli.dto.clube.*;
+import com.API_partidasFutebol_Meli.dto.confrontos.ConfrontoDiretoDTO;
+import com.API_partidasFutebol_Meli.dto.confrontos.ConfrontoResumoDTO;
+import com.API_partidasFutebol_Meli.dto.retrospectos.RetrospectoAdversarioDTO;
+import com.API_partidasFutebol_Meli.dto.retrospectos.RetrospectoDTO;
 import com.API_partidasFutebol_Meli.service.ClubeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;

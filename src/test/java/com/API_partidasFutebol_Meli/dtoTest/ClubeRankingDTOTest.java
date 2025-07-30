@@ -1,6 +1,6 @@
 package com.API_partidasFutebol_Meli.dtoTest;
 
-import com.API_partidasFutebol_Meli.dto.ClubeRankingDTO;
+import com.API_partidasFutebol_Meli.dto.clube.ClubeRankingDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,6 +1,6 @@
 package com.API_partidasFutebol_Meli.dtoTest;
 
-import com.API_partidasFutebol_Meli.dto.PartidaResponseDTO;
+import com.API_partidasFutebol_Meli.dto.partida.PartidaResponseDTO;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

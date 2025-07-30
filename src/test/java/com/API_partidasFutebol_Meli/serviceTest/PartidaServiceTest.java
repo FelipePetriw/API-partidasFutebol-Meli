@@ -1,9 +1,8 @@
 package com.API_partidasFutebol_Meli.serviceTest;
 
-import com.API_partidasFutebol_Meli.controller.EstadioController;
-import com.API_partidasFutebol_Meli.dto.PartidaFiltroDTO;
-import com.API_partidasFutebol_Meli.dto.PartidaRequestDTO;
-import com.API_partidasFutebol_Meli.dto.PartidaResponseDTO;
+import com.API_partidasFutebol_Meli.dto.partida.PartidaFiltroDTO;
+import com.API_partidasFutebol_Meli.dto.partida.PartidaRequestDTO;
+import com.API_partidasFutebol_Meli.dto.partida.PartidaResponseDTO;
 import com.API_partidasFutebol_Meli.entity.Clube;
 import com.API_partidasFutebol_Meli.entity.Estadio;
 import com.API_partidasFutebol_Meli.entity.Partida;

@@ -1,7 +1,7 @@
 package com.API_partidasFutebol_Meli.controller;
 
-import com.API_partidasFutebol_Meli.dto.EstadioRequestDTO;
-import com.API_partidasFutebol_Meli.dto.EstadioResponseDTO;
+import com.API_partidasFutebol_Meli.dto.estadio.EstadioRequestDTO;
+import com.API_partidasFutebol_Meli.dto.estadio.EstadioResponseDTO;
 import com.API_partidasFutebol_Meli.service.EstadioService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

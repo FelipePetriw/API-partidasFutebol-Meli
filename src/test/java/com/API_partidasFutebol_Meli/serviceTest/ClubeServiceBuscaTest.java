@@ -1,6 +1,10 @@
 package com.API_partidasFutebol_Meli.serviceTest;
 
-import com.API_partidasFutebol_Meli.dto.*;
+import com.API_partidasFutebol_Meli.dto.clube.ClubeRankingDTO;
+import com.API_partidasFutebol_Meli.dto.clube.ClubeUpdateDTO;
+import com.API_partidasFutebol_Meli.dto.confrontos.ConfrontoDiretoDTO;
+import com.API_partidasFutebol_Meli.dto.retrospectos.RetrospectoAdversarioDTO;
+import com.API_partidasFutebol_Meli.dto.retrospectos.RetrospectoDTO;
 import com.API_partidasFutebol_Meli.entity.Clube;
 import com.API_partidasFutebol_Meli.entity.Estadio;
 import com.API_partidasFutebol_Meli.entity.Partida;

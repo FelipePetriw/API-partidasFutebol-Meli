@@ -1,7 +1,7 @@
 package com.API_partidasFutebol_Meli.service;
 
-import com.API_partidasFutebol_Meli.dto.EstadioRequestDTO;
-import com.API_partidasFutebol_Meli.dto.EstadioResponseDTO;
+import com.API_partidasFutebol_Meli.dto.estadio.EstadioRequestDTO;
+import com.API_partidasFutebol_Meli.dto.estadio.EstadioResponseDTO;
 import com.API_partidasFutebol_Meli.entity.Estadio;
 import com.API_partidasFutebol_Meli.exception.RecursoDuplicadoException;
 import com.API_partidasFutebol_Meli.exception.ResourceNotFoundException;

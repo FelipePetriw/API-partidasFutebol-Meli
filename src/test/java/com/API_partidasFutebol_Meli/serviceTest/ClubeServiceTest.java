@@ -1,9 +1,9 @@
 package com.API_partidasFutebol_Meli.serviceTest;
 
-import com.API_partidasFutebol_Meli.dto.ClubeFiltroDTO;
-import com.API_partidasFutebol_Meli.dto.ClubeRequestDTO;
-import com.API_partidasFutebol_Meli.dto.ClubeResponseDTO;
-import com.API_partidasFutebol_Meli.dto.ClubeUpdateDTO;
+import com.API_partidasFutebol_Meli.dto.clube.ClubeFiltroDTO;
+import com.API_partidasFutebol_Meli.dto.clube.ClubeRequestDTO;
+import com.API_partidasFutebol_Meli.dto.clube.ClubeResponseDTO;
+import com.API_partidasFutebol_Meli.dto.clube.ClubeUpdateDTO;
 import com.API_partidasFutebol_Meli.entity.Clube;
 import com.API_partidasFutebol_Meli.exception.BadRequestException;
 import com.API_partidasFutebol_Meli.exception.RecursoDuplicadoException;

@@ -1,8 +1,8 @@
 package com.API_partidasFutebol_Meli.dtoTest;
 
-import com.API_partidasFutebol_Meli.dto.ConfrontoDiretoDTO;
-import com.API_partidasFutebol_Meli.dto.ConfrontoPartidaDTO;
-import com.API_partidasFutebol_Meli.dto.ConfrontoResumoDTO;
+import com.API_partidasFutebol_Meli.dto.confrontos.ConfrontoDiretoDTO;
+import com.API_partidasFutebol_Meli.dto.confrontos.ConfrontoPartidaDTO;
+import com.API_partidasFutebol_Meli.dto.confrontos.ConfrontoResumoDTO;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
